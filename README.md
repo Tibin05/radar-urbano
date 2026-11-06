@@ -9,7 +9,6 @@ Protótipo funcional da Global Solution 2026.2 (Engenharia de Software · FIAP).
 | Lucas Costa Sanson | RM556042 |
 
 - **Protótipo (deploy):** https://radar-urbano-gamma.vercel.app
-- **Documentação (requisitos, diagramas e arquitetura):** _a preencher (PDF)_
 - **Vídeo de demonstração:** _a preencher_
 
 ## Como executar
