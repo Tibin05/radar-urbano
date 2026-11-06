@@ -1,0 +1,53 @@
+/* =========================================================
+   Animação de entrada — não altera layout, cores nem tamanhos.
+   Só anima opacidade, desfoque e posição na hora que a tela abre.
+   ========================================================= */
+
+@keyframes entry-blur-up {
+  from { opacity: 0; filter: blur(8px); transform: translateY(14px); }
+  to   { opacity: 1; filter: none;      transform: none; }
+}
+
+@keyframes entry-blur-right {
+  from { opacity: 0; filter: blur(10px); transform: translateX(30px); }
+  to   { opacity: 1; filter: none;       transform: none; }
+}
+
+/* ---------------------------------------------------------
+   1) .entry-stagger  -> coloque no container do formulário.
+      Cada FILHO DIRETO entra em sequência, de cima para baixo.
+   --------------------------------------------------------- */
+.entry-stagger > * {
+  animation: entry-blur-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--entry-base, 0ms) + var(--entry-i, 0) * 80ms);
+}
+
+.entry-stagger > *:nth-child(1)  { --entry-i: 0; }
+.entry-stagger > *:nth-child(2)  { --entry-i: 1; }
+.entry-stagger > *:nth-child(3)  { --entry-i: 2; }
+.entry-stagger > *:nth-child(4)  { --entry-i: 3; }
+.entry-stagger > *:nth-child(5)  { --entry-i: 4; }
+.entry-stagger > *:nth-child(6)  { --entry-i: 5; }
+.entry-stagger > *:nth-child(7)  { --entry-i: 6; }
+.entry-stagger > *:nth-child(8)  { --entry-i: 7; }
+.entry-stagger > *:nth-child(9)  { --entry-i: 8; }
+.entry-stagger > *:nth-child(10) { --entry-i: 9; }
+.entry-stagger > *:nth-child(11) { --entry-i: 10; }
+.entry-stagger > *:nth-child(12) { --entry-i: 11; }
+.entry-stagger > *:nth-child(n+13) { --entry-i: 12; }
+
+/* Versão que começa mais tarde (para os cards das personas) */
+.entry-stagger.entry-late { --entry-base: 1600ms; }
+
+/* ---------------------------------------------------------
+   2) .entry-right  -> coloque no painel do mapa (lado direito).
+   --------------------------------------------------------- */
+.entry-right {
+  animation: entry-blur-right 1.6s cubic-bezier(0.22, 1, 0.36, 1) 700ms both;
+}
+
+/* Acessibilidade: sem animação para quem desativou no sistema */
+@media (prefers-reduced-motion: reduce) {
+  .entry-stagger > *,
+  .entry-right { animation: none; }
+}
