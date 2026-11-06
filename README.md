@@ -69,7 +69,7 @@ As regras de negócio do documento estão em [`src/domain/regras.js`](src/domain
 - **RN02 – risco:** severidade (1 a 4) × exposição (1 a 3) = S; Baixo 1–2, Moderado 3–5, Alto 6–8, Crítico 9–12.
 - **RN03 – prioridade e emissão:** prioridade = S × C/100. Confiança ≥ 75 confirma sozinho; Crítico emite automaticamente; Alto sem ação do agente em 10 min também.
 - **RN04 – destinatários:** bairros, tipos e nível mínimo das preferências; Crítico sempre chega.
-- **RN05 – encerramento e dado desatualizado:** idade maior que 2× o intervalo da fonte gera penalidade; 6 h sem dados encerra o evento.
+- **RN05 – encerramento e dado desatualizado:** idade maior que 2× o intervalo da fonte gera penalidade; leituras automáticas normais por 30 min (lâmina d’água abaixo de 5 cm ou sensação térmica abaixo de 32 °C) encerram o evento, assim como 6 h sem dados.
 
 As transições seguem o Diagrama de Estados: Reportado → Em validação → Confirmado → Alerta emitido → Em monitoramento → Encerrado / Descartado.
 

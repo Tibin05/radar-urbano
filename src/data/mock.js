@@ -15,7 +15,7 @@ export const BAIRROS = {
   Pinheiros: { lat: -23.567, lng: -46.692, inscritos: 2210 },
 };
 
-export const VERSAO_DADOS = 4;
+export const VERSAO_DADOS = 5;
 
 export function criarEstadoInicial(agora) {
   const m = (min) => agora - min * 60000;
@@ -252,6 +252,61 @@ export function criarEstadoInicial(agora) {
         h('Reportado', 5 * 60, 'Sistema', 'Relato comunitário recebido (RF03)'),
         h('Em validação', 5 * 60, 'Sistema', 'Dado válido, evento criado (RF04)'),
         h('Descartado', 4.5 * 60, 'Sistema', '3 contestações da comunidade (RN03)'),
+      ],
+    },
+    // Eventos de dias anteriores: dão conteúdo ao filtro de período das Análises (RF17)
+    {
+      id: 'evt-111',
+      tipo: 'alagamento',
+      titulo: 'Alagamento na Estrada Dom João Nery',
+      bairro: 'Itaim Paulista',
+      lat: -23.5018,
+      lng: -46.3987,
+      exposicao: 2,
+      estado: 'Encerrado',
+      criadoEm: m(3 * 24 * 60),
+      confirmadoEm: m(3 * 24 * 60 - 4),
+      emitidoEm: m(3 * 24 * 60 - 6),
+      nivelAlertado: 'Alto',
+      entregas: 2310,
+      dados: [
+        { id: 'd-1111', origem: 'sensor', fonte: 'Sensor de nível NV-131', medida: 3, descricao: 'Lâmina d’água de 3 cm (normalizada)', ts: m(3 * 24 * 60 - 200), intervaloMin: 1 },
+        { id: 'd-1112', origem: 'comunidade', fonte: 'Relato de morador', autor: 'anon-5e21', medida: 40, descricao: 'Água acima do joelho na estrada', foto: true, confirmacoes: 3, contestacoes: 0, reputacao: 0, ts: m(3 * 24 * 60) },
+      ],
+      historico: [
+        h('Reportado', 3 * 24 * 60, 'Sistema', 'Relato comunitário recebido (RF03)'),
+        h('Em validação', 3 * 24 * 60, 'Sistema', 'Dado válido, evento criado (RF04)'),
+        h('Confirmado', 3 * 24 * 60 - 4, 'Sistema', 'Confiança 90 ≥ 75 (RN03)'),
+        h('Alerta emitido', 3 * 24 * 60 - 6, 'Carlos Mendes (agente)', 'Alerta emitido pelo agente (RF13)'),
+        h('Em monitoramento', 3 * 24 * 60 - 7, 'Sistema', 'Notificações entregues a 2.310 inscritos'),
+        h('Encerrado', 3 * 24 * 60 - 230, 'Sistema', 'Leituras normais por 30 min (RN05)'),
+      ],
+    },
+    {
+      id: 'evt-112',
+      tipo: 'calor',
+      titulo: 'Ilha de calor na Sé',
+      bairro: 'Sé',
+      lat: -23.5495,
+      lng: -46.6349,
+      exposicao: 3,
+      estado: 'Encerrado',
+      criadoEm: m(5 * 24 * 60),
+      confirmadoEm: m(5 * 24 * 60 - 3),
+      emitidoEm: m(5 * 24 * 60 - 5),
+      nivelAlertado: 'Crítico',
+      entregas: 3120,
+      dados: [
+        { id: 'd-1121', origem: 'publica', fonte: 'Previsão meteorológica pública', medida: 38.5, descricao: 'Sensação térmica de 38,5 °C', ts: m(5 * 24 * 60), intervaloMin: 60 },
+        { id: 'd-1122', origem: 'sensor', fonte: 'Sensor de temperatura TC-012', medida: 30, descricao: 'Sensação térmica de 30 °C (normalizada)', ts: m(5 * 24 * 60 - 480), intervaloMin: 5 },
+      ],
+      historico: [
+        h('Reportado', 5 * 24 * 60, 'Sistema', 'Aviso da previsão meteorológica pública'),
+        h('Em validação', 5 * 24 * 60, 'Sistema', 'Dado válido, evento criado (RF04)'),
+        h('Confirmado', 5 * 24 * 60 - 3, 'Sistema', 'Confiança 95 ≥ 75 (RN03)'),
+        h('Alerta emitido', 5 * 24 * 60 - 5, 'Sistema', 'Risco Crítico: emissão automática (RN03)'),
+        h('Em monitoramento', 5 * 24 * 60 - 6, 'Sistema', 'Notificações entregues a 3.120 inscritos'),
+        h('Encerrado', 5 * 24 * 60 - 510, 'Sistema', 'Leituras normais por 30 min (RN05)'),
       ],
     },
   ];

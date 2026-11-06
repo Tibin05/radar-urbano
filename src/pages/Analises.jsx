@@ -1,4 +1,5 @@
 // T11 — Análises e indicadores (RF17): os três indicadores de sucesso do enunciado
+import { useState } from 'react';
 import { Clock, Gauge, Megaphone, Timer } from 'lucide-react';
 import { useStore } from '../store/Store.jsx';
 import { avaliar, NIVEIS, ORIGENS, TIPOS } from '../domain/regras.js';
@@ -25,9 +26,14 @@ function Barras({ linhas, cor }) {
 
 const contar = (lista, chave) => lista.reduce((m, x) => ((m[chave(x)] = (m[chave(x)] || 0) + 1), m), {});
 
+// RF17 — indicadores por período
+const PERIODOS = { '24h': { rotulo: 'Últimas 24 horas', curto: '24 h', horas: 24 }, '7d': { rotulo: 'Últimos 7 dias', curto: '7 dias', horas: 24 * 7 } };
+
 export default function Analises() {
   const { estado, agora } = useStore();
-  const eventos = estado.eventos.filter((e) => agora - e.criadoEm <= 24 * 3600000);
+  const [periodo, setPeriodo] = useState('24h');
+  const p = PERIODOS[periodo];
+  const eventos = estado.eventos.filter((e) => agora - e.criadoEm <= p.horas * 3600000);
   const ativos = estado.eventos.filter((e) => !FINAIS.includes(e.estado));
 
   // Tempo de atualização: idade média da última leitura dos sensores em eventos ativos (RNF01: até 60 s)
@@ -51,7 +57,19 @@ export default function Analises() {
 
   return (
     <>
-      <PageHeader titulo="Análises e indicadores" subtitulo="Últimas 24 horas · São Paulo" />
+      <PageHeader
+        titulo="Análises e indicadores"
+        subtitulo={`${p.rotulo} · São Paulo`}
+        acoes={
+          <div className="segmentado segmentado-curto" role="radiogroup" aria-label="Período">
+            {Object.entries(PERIODOS).map(([k, v]) => (
+              <button key={k} role="radio" aria-checked={periodo === k} className={periodo === k ? 'sel' : ''} onClick={() => setPeriodo(k)}>
+                {v.rotulo}
+              </button>
+            ))}
+          </div>
+        }
+      />
 
       <div className="kpis">
         <Kpi
@@ -69,7 +87,7 @@ export default function Analises() {
           tom="ok"
         />
         <Kpi rotulo="Tempo médio até o alerta" valor={`${num(ateAlerta, 1)} min`} detalhe={`${emitidos.length} alertas emitidos`} icone={Megaphone} />
-        <Kpi rotulo="Eventos ativos" valor={ativos.length} detalhe={`${eventos.length} registrados em 24 h`} icone={Clock} />
+        <Kpi rotulo="Eventos ativos" valor={ativos.length} detalhe={`${eventos.length} registrados em ${p.curto}`} icone={Clock} />
       </div>
 
       <div className="grade-2">

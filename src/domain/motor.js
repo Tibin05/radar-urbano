@@ -69,6 +69,14 @@ function emitir(s, ev, agora, por, motivo, automatico) {
 
 const contestacoes = (ev) => ev.dados.reduce((s, d) => s + (d.contestacoes || 0), 0);
 
+// RN05 — leitura "normal": lâmina d'água abaixo de 5 cm ou sensação térmica abaixo de 32 °C.
+// Só vale para eventos medidos por fontes automáticas; interrupções de serviço são encerradas pelo operador.
+const LIMITE_NORMAL = { alagamento: 5, calor: 32 };
+function leiturasNormais(ev) {
+  const automaticas = ev.dados.filter((d) => d.intervaloMin && d.medida != null && !d.atipico);
+  return ev.tipo in LIMITE_NORMAL && automaticas.length > 0 && automaticas.every((d) => d.medida < LIMITE_NORMAL[ev.tipo]);
+}
+
 // Um passo da máquina de estados. Retorna nada; altera ev.
 function passo(s, ev, agora) {
   const av = avaliar(ev, agora);
@@ -105,8 +113,13 @@ function passo(s, ev, agora) {
         transitar(ev, 'Em monitoramento', agora, 'Sistema', `Notificações entregues a ${ev.entregas.toLocaleString('pt-BR')} inscritos`);
       break;
     case 'Em monitoramento':
+      // Marca desde quando as leituras estão normais; qualquer leitura fora do normal zera a contagem
+      if (leiturasNormais(ev)) ev.normalDesde ??= agora;
+      else delete ev.normalDesde;
+
       if (ev.nivelAlertado && NIVEIS.indexOf(av.nivel) > NIVEIS.indexOf(ev.nivelAlertado))
         emitir(s, ev, agora, 'Sistema', `Risco subiu de ${ev.nivelAlertado} para ${av.nivel}: reemissão (RN04)`, true);
+      else if (ev.normalDesde && agora - ev.normalDesde >= 30 * MIN) transitar(ev, 'Encerrado', agora, 'Sistema', 'Leituras normais por 30 min (RN05)');
       else if (agora - ultimoDado > 360 * MIN) transitar(ev, 'Encerrado', agora, 'Sistema', '6 h sem dados novos (RN05)');
       break;
     default:
