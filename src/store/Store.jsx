@@ -3,12 +3,22 @@ import { criarEstadoInicial, VERSAO_DADOS } from '../data/mock.js';
 import * as motor from '../domain/motor.js';
 
 const CHAVE = 'radar-urbano';
+// Marca de "sessão aberta": cookie sem data de validade, que vale em todas as abas e some quando o navegador fecha
+const COOKIE_SESSAO = 'radar-urbano-sessao=1';
+export const abrirSessao = () => {
+  document.cookie = `${COOKIE_SESSAO}; path=/; SameSite=Lax`;
+};
+const sessaoAberta = () => document.cookie.split('; ').includes(COOKIE_SESSAO);
 const Ctx = createContext(null);
 
 function carregar() {
   try {
     const salvo = JSON.parse(localStorage.getItem(CHAVE));
-    if (salvo?.versao === VERSAO_DADOS) return salvo;
+    if (salvo?.versao === VERSAO_DADOS) {
+      // "Manter conectado" desmarcado: depois que o navegador fecha, volta para o login
+      if (salvo.manterConectado === false && !sessaoAberta()) salvo.perfil = null;
+      return salvo;
+    }
   } catch {
     /* sem armazenamento disponível: começa com os dados de demonstração */
   }
@@ -23,6 +33,8 @@ function reducer(estado, acao) {
     case 'LOGIN':
       s.perfil = acao.perfil;
       if (acao.nome) s.usuarios[acao.perfil].nome = acao.nome;
+      // Só a tela de login informa "manter"; a troca de perfil em "Ver como" mantém a escolha anterior
+      if ('manter' in acao) s.manterConectado = acao.manter;
       return s;
     case 'LOGOUT':
       s.perfil = null;

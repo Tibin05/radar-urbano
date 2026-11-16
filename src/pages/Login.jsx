@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BadgeCheck, Eye, EyeOff, Home, ShieldCheck } from 'lucide-react';
-import { useStore } from '../store/Store.jsx';
+import { abrirSessao, useStore } from '../store/Store.jsx';
 import { BAIRROS } from '../data/mock.js';
 import { avaliar } from '../domain/regras.js';
 import { FINAIS } from '../domain/motor.js';
@@ -38,6 +38,7 @@ export default function Login() {
   const [modo, setModo] = useState('entrar');
   const [perfil, setPerfil] = useState('morador');
   const [verSenha, setVerSenha] = useState(false);
+  const [manter, setManter] = useState(true);
   const [cad, setCad] = useState({ nome: '', email: '', bairro: 'Jardim Pantanal', termos: false, localizacao: true, analises: false });
 
   const itensMapa = useMemo(
@@ -45,17 +46,20 @@ export default function Login() {
     [estado.eventos, agora],
   );
 
+  // abrirSessao(): com "Manter conectado" desmarcado, é o que mantém o login até o navegador fechar
   const entrar = (e) => {
     e.preventDefault();
-    dispatch({ type: 'LOGIN', perfil });
+    abrirSessao();
+    dispatch({ type: 'LOGIN', perfil, manter });
     navigate('/painel');
   };
 
   const cadastrar = (e) => {
     e.preventDefault();
+    abrirSessao();
     dispatch({ type: 'CONSENTIMENTO', chave: 'localizacao', valor: cad.localizacao });
     dispatch({ type: 'CONSENTIMENTO', chave: 'analises', valor: cad.analises });
-    dispatch({ type: 'LOGIN', perfil: 'morador', nome: cad.nome.trim() || undefined });
+    dispatch({ type: 'LOGIN', perfil: 'morador', nome: cad.nome.trim() || undefined, manter: true });
     navigate('/painel');
   };
 
@@ -123,7 +127,7 @@ export default function Login() {
 
               <div className="login-linha">
                 <label className="check">
-                  <input type="checkbox" defaultChecked />
+                  <input type="checkbox" checked={manter} onChange={(e) => setManter(e.target.checked)} />
                   <span>Manter conectado</span>
                 </label>
                 <button type="button" className="link-texto" onClick={() => avisar(`Enviamos um link de redefinição para ${estado.usuarios[perfil].email}`)}>

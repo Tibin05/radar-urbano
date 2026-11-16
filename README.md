@@ -56,7 +56,7 @@ Na tela de login, escolha uma das três contas. Depois de entrar, dá para troca
 1. Entre como **Ana (morador)**. O painel mostra os eventos ativos no mapa, coloridos por risco, com o selo de confiança.
 2. **Registrar ocorrência** → Alagamento → "Acima do joelho" → **Usar minha localização**. O app avisa que existe um evento a menos de 500 m. Envie.
 3. A tela de sucesso mostra o protocolo e a confiança do evento subindo de **80 para 90**. O relato foi agrupado com o sensor NV-114 (RF04, RN01).
-4. Clique no selo de confiança para ver a tela **Origem e confiança**, com nota base, ajustes e fórmula.
+4. Clique em **Acompanhar evento** e, no detalhe do alerta, clique no selo de confiança para ver a tela **Origem e confiança**, com nota base, ajustes e fórmula.
 5. Troque para **Carlos (agente)** → **Fila de validação**. O evento aparece no topo com prioridade **5,4** (S = 3 × 2 = 6, risco Alto) e contagem para a emissão automática.
 6. Clique em **Emitir alerta**. Troque de volta para **Ana** → **Notificações**: o alerta chegou com as orientações e os canais usados.
 
